@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const express = require("express");
 const router = express.Router();
 
@@ -37,6 +38,9 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+    const { error } = validatePlace(req.body);
+    if (error) return res.status(400).send(`${error}`);
+
     const place = {
         id: places.length + 1,
         name: req.body.name,
@@ -48,6 +52,9 @@ router.post("/", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
+    const { error } = validatePlace(req.body);
+    if (error) return res.status(400).send(`${error}`);
+
     const place = places.find(p => p.id === parseInt(req.params.id));
     if (!place) {
         return res.status(404).send(notFoundErrorMsg);
@@ -67,5 +74,14 @@ router.delete("/:id", (req, res) => {
     places.splice(index, 1);
     res.send(place);
 });
+
+function validatePlace(place) {
+    const schema = Joi.object({
+        name: Joi.string().min(3).max(255).required(),
+        location: Joi.string().min(3).max(255),
+        openingTimes: Joi.string().min(3).max(255),
+    });
+    return schema.validate(place);
+}
 
 module.exports = router;
