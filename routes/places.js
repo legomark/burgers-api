@@ -44,7 +44,7 @@ router.post("/", (req, res) => {
         openingTimes: req.body.openingTimes,
     };
     places.push(place);
-    res.send(place);
+    res.status(201).send(place);
 });
 
 router.put("/:id", (req, res) => {
