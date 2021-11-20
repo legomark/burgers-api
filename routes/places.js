@@ -1,5 +1,4 @@
 const { Place, validate } = require("../models/place");
-const Joi = require("joi");
 const express = require("express");
 const router = express.Router();
 
