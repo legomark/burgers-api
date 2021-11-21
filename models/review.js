@@ -49,7 +49,6 @@ reviewSchema.methods.submit = async function () {
     user.submitReview(this);
 
     const place = await Place.findById(this.place);
-    console.log(place);
     place.submitReview(this);
 };
 
