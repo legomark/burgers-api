@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
 const { User } = require("../models/user");
+const { Place } = require("./place");
 
 const reviewSchema = mongoose.Schema({
     user: {
@@ -46,6 +47,10 @@ reviewSchema.methods.submit = async function () {
 
     const user = await User.findById(this.user);
     user.submitReview(this);
+
+    const place = await Place.findById(this.place);
+    console.log(place);
+    place.submitReview(this);
 };
 
 const Review = mongoose.model("Review", reviewSchema);
