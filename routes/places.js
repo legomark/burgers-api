@@ -10,8 +10,8 @@ router.get("/", async (req, res) => {
     res.send(places);
 });
 
-router.get("/:id", (req, res) => {
-    const place = places.find(p => p.id === parseInt(req.params.id));
+router.get("/:id", async (req, res) => {
+    const place = await Place.findById(req.params.id).select("-__v");
     if (!place) return res.status(404).send(notFoundErrorMsg);
     res.send(place);
 });
