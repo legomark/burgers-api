@@ -2,13 +2,20 @@ const _ = require("lodash");
 const { Place, validate } = require("../models/place");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const { Filter } = require("../utility/filter");
+const { Sorting } = require("../utility/sort");
 const express = require("express");
 const router = express.Router();
 
 const notFoundErrorMsg = "The Burger Place with the given ID cannot be found.";
 
 router.get("/", async (req, res) => {
-    const places = await Place.find().select("-__v").sort("name");
+    const sorting = Sorting.get(req);
+    const filters = Filter.get(req);
+    const { error } = Filter.validate(filters);
+    if (error) return res.status(400).send(`${error}`);
+
+    const places = await Place.find(filters).sort(sorting).select("-__v");
     res.send(places);
 });
 
