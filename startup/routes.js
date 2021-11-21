@@ -4,6 +4,7 @@ const reviews = require("../routes/reviews");
 const users = require("../routes/users");
 const auth = require("../routes/auth");
 const helmet = require("helmet");
+const error = require("../middleware/error");
 
 module.exports = function (app) {
     app.use(helmet());
@@ -12,4 +13,5 @@ module.exports = function (app) {
     app.use("/api/reviews", reviews);
     app.use("/api/users", users);
     app.use("/api/auth", auth);
+    app.use(error);
 };

@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
+require("express-async-errors");
 const express = require("express");
 const config = require("config");
 const app = express();
