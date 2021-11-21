@@ -1,3 +1,4 @@
 {
-    "jwtPrivateKey": "burgers_api_jwtPrivateKey"
+    "jwtPrivateKey": "burgers_api_jwtPrivateKey",
+    "db": "burgers_api_db"
 }
