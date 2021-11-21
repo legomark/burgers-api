@@ -7,6 +7,7 @@ const app = express();
 
 require("./startup/routes")(app);
 require("./startup/db")();
+require("./startup/config")();
 
 const port = process.env.PORT || config.get("port");
 app.listen(port, () => {

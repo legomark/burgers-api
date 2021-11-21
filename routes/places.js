@@ -1,4 +1,5 @@
 const { Place, validate } = require("../models/place");
+const auth = require("../middleware/auth");
 const express = require("express");
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.get("/:id", (req, res) => {
     res.send(place);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(`${error}`);
 
@@ -28,7 +29,7 @@ router.post("/", async (req, res) => {
     res.status(201).send(place);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(`${error}`);
 
@@ -45,7 +46,7 @@ router.put("/:id", async (req, res) => {
     res.send(place);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
     const place = await Place.findByIdAndRemove(req.params.id);
     if (!place) return res.status(404).send(notFoundErrorMsg);
     res.send(place);

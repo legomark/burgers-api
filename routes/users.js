@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const { User, validate } = require("../models/user");
+const auth = require("../middleware/auth");
 const express = require("express");
 const router = express.Router();
 
@@ -11,6 +12,12 @@ router.get("/", async (req, res) => {
     res.send(users);
 });
 
+router.get("/me", auth, async (req, res) => {
+    const user = await User.findById(req.user._id).select("-__v -password");
+    res.send(user);
+});
+
+// user registration
 router.post("/", async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(`${error}`);
@@ -24,7 +31,11 @@ router.post("/", async (req, res) => {
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
 
-    res.status(201).send(_.pick(user, ["_id", "name", "email"]));
+    const token = user.generateAuthToken();
+    // todo: email verification step?
+    res.status(201)
+        .header("x-auth-token", token)
+        .send(_.pick(user, ["_id", "name", "email"]));
 });
 
 module.exports = router;
