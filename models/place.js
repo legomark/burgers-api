@@ -20,6 +20,35 @@ const Place = mongoose.model(
             minlength: 3,
             maxlength: 255,
         },
+        reviewCount: {
+            type: Number,
+            min: 0,
+            default: 0,
+        },
+        avgScore: {
+            type: Number,
+            min: 0,
+            max: 10,
+            default: 0,
+        },
+        avgTaste: {
+            type: Number,
+            min: 0,
+            max: 10,
+            default: 0,
+        },
+        avgTexture: {
+            type: Number,
+            min: 0,
+            max: 10,
+            default: 0,
+        },
+        avgVisualPresentation: {
+            type: Number,
+            min: 0,
+            max: 10,
+            default: 0,
+        },
     })
 );
 
