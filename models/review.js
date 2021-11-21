@@ -43,20 +43,22 @@ const reviewSchema = mongoose.Schema({
 reviewSchema.methods.submit = async function () {
     const score = (this.taste + this.texture + this.visualPresentation) / 3;
     this.score = score;
-    this.save();
 
     const user = await User.findById(this.user);
-    user.submitReview(this);
-
     const place = await Place.findById(this.place);
-    place.submitReview(this);
+
+    if (user && place) {
+        this.save();
+        user.submitReview(this);
+        place.submitReview(this);
+    }
 };
 
 const Review = mongoose.model("Review", reviewSchema);
 
 function validateReview(review) {
     const schema = Joi.object({
-        place: Joi.string(),
+        place: Joi.objectId(),
         taste: Joi.number().integer().min(1).max(10).required(),
         texture: Joi.number().integer().min(1).max(10).required(),
         visualPresentation: Joi.number().integer().min(1).max(10).required(),

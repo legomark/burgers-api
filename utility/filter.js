@@ -1,5 +1,4 @@
 const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
 
 module.exports.Filter = {
     get: function (req) {
@@ -16,6 +15,8 @@ module.exports.Filter = {
             _id: Joi.objectId(),
             name: Joi.string().min(3).max(255),
             email: Joi.string().email().max(255),
+            place: Joi.objectId(),
+            user: Joi.objectId(),
             location: Joi.string().min(3).max(255),
             openingTimes: Joi.string().min(3).max(255),
             reviewCount: Joi.number().min(0),
