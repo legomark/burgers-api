@@ -1,45 +1,54 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
+const { User } = require("../models/user");
 
-const Review = mongoose.model(
-    "Review",
-    mongoose.Schema({
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: "User",
-        },
-        place: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: "Place",
-        },
-        taste: {
-            type: Number,
-            required: true,
-            min: 1,
-            max: 10,
-        },
-        texture: {
-            type: Number,
-            required: true,
-            min: 1,
-            max: 10,
-        },
-        visualPresentation: {
-            type: Number,
-            required: true,
-            min: 1,
-            max: 10,
-        },
-        score: {
-            type: Number,
-            required: true,
-            min: 1,
-            max: 10,
-        },
-    })
-);
+const reviewSchema = mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "User",
+    },
+    place: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Place",
+    },
+    taste: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 10,
+    },
+    texture: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 10,
+    },
+    visualPresentation: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 10,
+    },
+    score: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 10,
+    },
+});
+
+reviewSchema.methods.submit = async function () {
+    const score = (this.taste + this.texture + this.visualPresentation) / 3;
+    this.score = score;
+    this.save();
+
+    const user = await User.findById(this.user);
+    user.submitReview(this);
+};
+
+const Review = mongoose.model("Review", reviewSchema);
 
 function validateReview(review) {
     const schema = Joi.object({

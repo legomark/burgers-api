@@ -2,6 +2,7 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const _ = require("lodash");
 
 const userSchema = mongoose.Schema({
     name: {
@@ -51,6 +52,11 @@ userSchema.methods.generateAuthToken = function () {
         config.get("jwtPrivateKey")
     );
     return token;
+};
+
+userSchema.methods.submitReview = function (review) {
+    this.reviews.push(_.pick(review, ["_id", "place", "score"]));
+    this.save();
 };
 
 const User = mongoose.model("User", userSchema);
