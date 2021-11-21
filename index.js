@@ -1,16 +1,17 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-require("express-async-errors");
+const winston = require("winston");
 const express = require("express");
 const config = require("config");
 const app = express();
 
+require("./startup/logging");
 require("./startup/routes")(app);
 require("./startup/db")();
 require("./startup/config")();
 
 const port = process.env.PORT || config.get("port");
 app.listen(port, () => {
-    console.log(`Listening on http://localhost:${port}...`);
+    winston.info(`Listening on port ${port}...`);
 });
