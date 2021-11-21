@@ -26,6 +26,20 @@ const userSchema = mongoose.Schema({
     isAdmin: {
         type: Boolean,
     },
+    reviews: [
+        {
+            place: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Place",
+            },
+            score: {
+                type: Number,
+                required: true,
+                min: 1,
+                max: 10,
+            },
+        },
+    ],
 });
 
 userSchema.methods.generateAuthToken = function () {
