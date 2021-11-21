@@ -1,4 +1,5 @@
 {
     "port": "3000",
-    "db": "mongodb://localhost/burgers-db"
+    "db": "mongodb://localhost/burgers-db",
+    "jwtPrivateKey": ""
 }
