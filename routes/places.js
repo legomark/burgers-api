@@ -1,5 +1,7 @@
+const _ = require("lodash");
 const { Place, validate } = require("../models/place");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const express = require("express");
 const router = express.Router();
 
@@ -26,7 +28,9 @@ router.post("/", auth, async (req, res) => {
         openingTimes: req.body.openingTimes,
     });
     await place.save();
-    res.status(201).send(place);
+    res.status(201).send(
+        _.pick(place, ["id", "name", "location", "openingTimes"])
+    );
 });
 
 router.put("/:id", auth, async (req, res) => {
@@ -41,13 +45,13 @@ router.put("/:id", auth, async (req, res) => {
             openingTimes: req.body.openingTimes,
         },
         { new: true }
-    );
+    ).select("-__v");
     if (!place) return res.status(404).send(notFoundErrorMsg);
     res.send(place);
 });
 
-router.delete("/:id", auth, async (req, res) => {
-    const place = await Place.findByIdAndRemove(req.params.id);
+router.delete("/:id", [auth, admin], async (req, res) => {
+    const place = await Place.findByIdAndRemove(req.params.id).select("-__v");
     if (!place) return res.status(404).send(notFoundErrorMsg);
     res.send(place);
 });
