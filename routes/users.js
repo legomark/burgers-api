@@ -4,12 +4,13 @@ const { User, validate } = require("../models/user");
 const { Filter } = require("../utility/filter");
 const { Sorting } = require("../utility/sort");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const express = require("express");
 const router = express.Router();
 
 const notFoundErrorMsg = "User with the given ID cannot be found.";
 
-router.get("/", async (req, res) => {
+router.get("/", [auth, admin], async (req, res) => {
     const sorting = Sorting.get(req);
     const filters = Filter.get(req);
     const { error } = Filter.validate(filters);
